@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ironcoil: robotic dragon arena</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600&family=Barlow:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/src/style.css">
+</head>
+<body>
+<canvas id="c" aria-label="3D arena with a robotic serpent dragon"></canvas>
+<div class="vignette"></div>
+<div class="flash" id="flash"></div>
+
+<div class="hud">
+  <div class="plate">
+    <h1>Ironcoil</h1>
+    <p>Robotic serpent dragon. <b>State:</b> <span id="state">Idle</span></p>
+  </div>
+</div>
+
+<div class="score">eggs shattered<strong id="score">0</strong><em id="fps">--</em></div>
+
+<div class="icons">
+  <button class="icon" id="btnHelp" title="Controls (H)" aria-label="Controls">?</button>
+  <button class="icon" id="btnCog" title="Settings (O)" aria-label="Settings">&#9881;</button>
+</div>
+
+<!-- Ability bar. Doubles as the touch controls, so phone and desktop share one layout. -->
+<div class="hotbar" id="hotbar">
+  <button class="slot" data-act="claw" data-key="J">
+    <span class="cool"></span><span class="glyph">&#10022;</span><span class="nm">Claw</span><span class="cap">J</span>
+    <span class="pips"><i></i><i></i><i></i></span>
+  </button>
+  <button class="slot" data-act="tail" data-key="K">
+    <span class="cool"></span><span class="glyph">&#8634;</span><span class="nm">Tail</span><span class="cap">K</span>
+  </button>
+  <button class="slot wide" data-act="fire" data-key="F">
+    <span class="cool"></span><span class="glyph">&#9650;</span><span class="nm">Fire</span><span class="cap">F</span>
+    <span class="charge"><i></i></span>
+    <span class="hint">tap throws, hold burns</span>
+  </button>
+  <button class="slot" data-act="lunge" data-key="L">
+    <span class="cool"></span><span class="glyph">&#10142;</span><span class="nm">Lunge</span><span class="cap">L</span>
+  </button>
+  <button class="slot" data-act="roar" data-key="Space">
+    <span class="cool"></span><span class="glyph">&#9773;</span><span class="nm">Roar</span><span class="cap">SPC</span>
+  </button>
+</div>
+
+<div class="touch" id="touch">
+  <div class="pad" id="pad"><i id="knob"></i></div>
+</div>
+
+<div class="panel" id="help" role="dialog" aria-label="Controls">
+  <h2>Controls</h2>
+  <div class="grid">
+    <div><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd></div><p>Move, relative to the camera</p>
+    <div><kbd>Shift</kbd></div><p>Sprint</p>
+    <div><kbd>J</kbd></div><p>Claw. Two more in rhythm ends in a slam</p>
+    <div><kbd>K</kbd></div><p>Tail spin, hits everything around you</p>
+    <div><kbd>F</kbd></div><p>Tap to throw a fireball, hold to breathe</p>
+    <div><kbd>L</kbd></div><p>Lunge through a target</p>
+    <div><kbd>Space</kbd></div><p>Roar, knocks eggs back and heats them</p>
+    <div><kbd>R</kbd></div><p>Return to the middle</p>
+    <div class="wide2">Drag to orbit, wheel to zoom</div>
+  </div>
+</div>
+
+<div class="panel" id="settings" role="dialog" aria-label="Settings">
+  <h2>Settings</h2>
+  <div class="rows">
+    <button id="btnQuality" title="Q">Quality: High</button>
+    <button id="btnBloom" aria-pressed="true" title="V">Bloom</button>
+    <button id="btnSound" aria-pressed="false" title="M">Sound</button>
+    <button id="btnBones" aria-pressed="false" title="B">Show skeleton</button>
+    <button id="btnNotes" aria-pressed="false" title="I">Rig notes</button>
+  </div>
+</div>
+
+<aside class="notes" id="notes" aria-live="polite">
+  <h2>What the rig can and cannot do</h2>
+  <ul>
+    <li><b>51 skinned bones</b>, all from a humanoid template. No tail chain, no wing bones, no jaw, no neck joint in the skin.</li>
+    <li><b>Tail</b> is one leaf bone (R_ToeBase) plus the legs. The travelling wave down the coil is not bones at all, it is a rotation applied to the rest positions before skinning.</li>
+    <li><b>Back blades</b> share Waist and both clavicles with the arms, so they cannot be sprung on their own either. Same trick.</li>
+    <li><b>Jaw</b> has no bone. It swings around a measured hinge in the vertex shader. It cannot close: the upper fangs interlock into the lower jaw with only 2.5 degrees of clearance, so closing would drive the jaw through them.</li>
+    <li>Joint transforms were missing in the export, so every bone sat at the origin. They were rebuilt from the inverse bind matrices before this page could animate anything.</li>
+  </ul>
+</aside>
+
+<div class="loader" id="loader">
+  <div>
+    <h1>Ironcoil</h1>
+    <p id="loadmsg">Decoding model</p>
+    <div class="bar"><i id="loadbar"></i></div>
+  </div>
+</div>
+
+<script type="module" src="/src/main.js"></script>
+</body>
+</html>
